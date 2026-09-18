@@ -15,85 +15,123 @@ labels:
 
 ## What is a smart question?
 
-To ask a smart question, you need to understand what a smart question is. A smart question by 
+To ask a smart question, you need to understand what a smart question is. Eric Raymond thinks a smart question has multiple components. The components are doing some research, explaining the problem clearly, show what you have already tried, giving specific details, asking specific questions, not making people do unnecessary work, etc. This helps you and others that try to help you save time, energy and can make the whole process smoother
 
-## Why are smart questions important.?
+## Why are smart questions important?
 
-Stack Overflow, a question and answer site for programmers, is a great resource for anyone who may have issues with code or who may simply want to learn new or different methods of doing something. There I found examples of good questions and bad questions, which could probably be improved.
+Software engineers rarely work independently, due to the job you will be often than not working with others. During your work you might face multiple problems that might be too hard to solve on your own. This is when communication will be an important skill to utilize to effectively solve a certain problem. This is when smart questions can be very useful. By asking smart questions people will be inclined to answer questions and solving problems will be quicker and easier than ever. Today we will be exploring some examples to help you understand it better. First, we will look at a good example of a smart question.
+```
+Q: Why is conditional processing of a sorted array faster than of an unsorted array? [Link](https://stackoverflow.com/questions/11227809/why-is-conditional-processing-of-a-sorted-array-faster-than-of-an-unsorted-array?)
 
-In the following example, we examine the components of a decent question. In this case, the asker is trying to figure out a way to get the date of the previous month in Python.
+In this C++ code, sorting the data (before the timed region) makes the primary loop ~6x faster:
+
+#include <algorithm>
+#include <ctime>
+#include <iostream>
+
+int main()
+{
+    // Generate data
+    const unsigned arraySize = 32768;
+    int data[arraySize];
+
+    for (unsigned c = 0; c < arraySize; ++c)
+        data[c] = std::rand() % 256;
+
+    // !!! With this, the next loop runs faster.
+    std::sort(data, data + arraySize);
+
+    // Test
+    clock_t start = clock();
+    long long sum = 0;
+    for (unsigned i = 0; i < 100000; ++i)
+    {
+        for (unsigned c = 0; c < arraySize; ++c)
+        {   // Primary loop.
+            if (data[c] >= 128)
+                sum += data[c];
+        }
+    }
+
+    double elapsedTime = static_cast<double>(clock()-start) / CLOCKS_PER_SEC;
+
+    std::cout << elapsedTime << '\n';
+    std::cout << "sum = " << sum << '\n';
+}
+Without std::sort(data, data + arraySize);, the code runs in 11.54 seconds.
+With the sorted data, the code runs in 1.93 seconds.
+(Sorting itself takes more time than this one pass over the array, so it's not actually worth doing if we needed to calculate this for an unknown array.)
+
+Initially, I thought this might be just a language or compiler anomaly, so I tried Java:
+
+import java.util.Arrays;
+import java.util.Random;
+
+public class Main
+{
+    public static void main(String[] args)
+    {
+        // Generate data
+        int arraySize = 32768;
+        int data[] = new int[arraySize];
+
+        Random rnd = new Random(0);
+        for (int c = 0; c < arraySize; ++c)
+            data[c] = rnd.nextInt() % 256;
+
+        // !!! With this, the next loop runs faster
+        Arrays.sort(data);
+
+        // Test
+        long start = System.nanoTime();
+        long sum = 0;
+        for (int i = 0; i < 100000; ++i)
+        {
+            for (int c = 0; c < arraySize; ++c)
+            {   // Primary loop.
+                if (data[c] >= 128)
+                    sum += data[c];
+            }
+        }
+
+        System.out.println((System.nanoTime() - start) / 1000000000.0);
+        System.out.println("sum = " + sum);
+    }
+}
+With a similar but less extreme result.
+
+My first thought was that sorting brings the data into the cache, but that's silly because the array was just generated.
+
+What is going on?
+Why is processing a sorted array faster than processing an unsorted array?
+The code is summing up some independent terms, so the order should not matter.
+```
+First the title already gives the reader a good idea on what he is trying to ask making the reader understand his question instantly. Second, he provied actual code as evidence making all readers understand what point he is at and what he is talking about. Showing code makes the readers try it themselves to see if they can answer the question with their testing. Third, he is stating the observation and assumption differently as mixing them up can cause confusion slowing down how fast the readers can answer it. Lastly, he shows what he has already tested with c++ code and java to see if the language caused it but in this experiment it did not matter. 
+I will not be showing all answers on here but there are 25 different replies that tried to answer his question. Because of his question being a good questions readers are more inclined to answer giving him 25 replies with all great responses that help the original question solved. The answer with the most upvotes thinks that it is due to branch prediction with a good reasoning and has a lot of thought behind it. If you want to know more about it click on the link and you can see all the interactions there.
+
+
+## The not so smart way of asking a question.
+
+This will be a not so smart question that makes readers hard or not wanting to answer his question. 
 
 ```
-Q: python date of the previous month
+Q: dynamic treeview with html,php and javascript and mysql [link](https://stackoverflow.com/questions/38863933/dynamic-treeview-with-html-php-and-javascript-and-mysql?)
 
-I am trying to get the date of the previous month with python. Here is what i've tried:
+2
 
-str( time.strftime('%Y') ) + str( int(time.strftime('%m'))-1 )
+I have created a table in mysql database using php, and also i can displayed that table on the web form, But the thing is that i want to do, I have six field in my table.
 
-However, this way is bad for 2 reasons: First it returns 20122 for the February of 2012 (instead of 201202) 
-and secondly it will return 0 instead of 12 on January.
+That are,Sr_no which is auto increment, Process_no, Process Name, Ownership, Sheet Revision_no and Revision Date.
 
-I have solved this trouble in bash with:
+Now i want to make a dynamic tree view type in my field Process_no.
 
-echo $(date -d"3 month ago" "+%G%m%d")
+For eg: i have the value in that field M01, so when i'll click on M01 then there should be a sub-list under it, such as M01.1, M01.2,.... and so on. and this thing i want in every column of that field.
 
-I think that if bash has a built-in way for this purpose, then python, much more equipped, should provide something 
-better than forcing writing one's own script to achieve this goal. Of course i could do something like:
+i had tried a lot but fail to do it.
 
-if int(time.strftime('%m')) == 1:
-    return '12'
-else:
-    if int(time.strftime('%m')) < 10:
-        return '0'+str(time.strftime('%m')-1)
-    else:
-        return str(time.strftime('%m') -1)
-        
-I have not tested this code and i don't want to use it anyway (unless I can't find any other way:/)
+if you have any solution or any code for it, then please help me. i'm not a experience candidate, new at php and mysql.
 
-Thanks for your help!
+so please help.
 ```
 
-While the heading of his question could be better, it does convey what he’s trying to figure out. Usually something as brief as “python date of previous month” is what other users would enter in as search terms on Google, making it easily found. Another good thing about the question is that it’s not just a question. The asker shows what he or she has done and that he or she has put in some effort to answer the question. And while it may not be as important as the question itself, the asker shows courtesy, which does increase the chance of getting an answer.
-
-```
-A: datetime and the datetime.timedelta classes are your friend.
-
-1. find today
-2. use that to find the first day of this month.
-3. use timedelta to backup a single day, to the last day of the previous month.
-4. print the YYYYMM string you're looking for.
-
-Like this:
-
- >>> import datetime
- >>> today = datetime.date.today()
- >>> first = datetime.date(day=1, month=today.month, year=today.year)
- >>> lastMonth = first - datetime.timedelta(days=1)
- >>> print lastMonth.strftime("%Y%m")
- 201202
- >>>
-
-```
- 
-The asker received six possible answers, and he or she was successful in inciting discussion from multiple users. The answers themselves were clear and were devoid of the rumored sarcasm and hostility of “hackers.” Since I myself have referenced this page and found it useful, I can confidently say that it is a good question.
-
-## The foolproof way to get ignored.
-
-While there are decent questions that benefit everyone, there are those one can ask to create an entirely different effect. In the following example, a user asks how he would, in short, create a desktop application with Facebook.
-
-```
-Q: Facebook Desktop Notifier
-
-I am a beginner programmer that have never used anything other than what's included in a language.
-
-I am trying to create a desktop application that notifies me anytime I get an update onfacebook. 
-How should go about doing this? Thanks in advance.
-
-edit Sorry I was not clear. Is there any way to make a DESKTOP application with facebook?
-```
-
-A simple “yes” would have answered the question, but we know that’s not the sort of answer he or she is looking for. Fortunately, someone kindly responded with a link to Facebook’s developer website. The asker should have done more research on his or her potential project. Then further down the road, he or she could have asked more specific and detailed questions that wouldn’t require a thousand-paged response for a sufficient answer.
-
-## Conclusion
-
-When we rely on others’ generosity and expertise to provide answers to our questions, it should hold that the question we ask should be one that leads to efficient and effective help that not only benefits us, but also the people we ask and others who might ask the same question in the future. Thus, if you have a question… make it a smart one! Asking questions may not always get you the best answer, but asking them in a way that will make others want to answer them will increase the success of finding a good solution and make it a positive experience on all sides.
+For this question its hard to understand what he is trying to ask and he also doesn't show any examples/code so we're not sure what he even is talking about. When a question like this is asked its hard for readers to answer making them less inclined to answer them. He also didn't show any code that he has already tried but instead says tried alot but failed making him seem like lazy and haven't really tried all that much. Because of this question the answers on this post couldn't really solve his problem because the reader needed more information to understand what the problem is. This showed inefficiency and why its important to ask a smart question for easier answers.
