@@ -3,7 +3,7 @@ layout: essay
 type: essay
 title: "Importance of smart questions"
 # All dates must be YYYY-MM-DD format!
-date: 2026-09-10
+date: 2026-10-05
 published: true
 labels:
   - Questions
