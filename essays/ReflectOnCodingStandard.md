@@ -6,9 +6,9 @@ title: "Reflection of coding standards"
 date: 2026-10-05
 published: true
 labels:
-  - Questions
-  - Answers
-  - StackOverflow
+  - Coding
+  - Esthetic
+  - ESlint
 ---
 
 <img width="300px" class="rounded float-start pe-4" src="../img/smart-questions/Questions.webp">
