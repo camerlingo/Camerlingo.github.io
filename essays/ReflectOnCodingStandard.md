@@ -1,7 +1,7 @@
 ---
 layout: essay
 type: essay
-title: "Importance of smart questions"
+title: "Reflection of coding standards"
 # All dates must be YYYY-MM-DD format!
 date: 2026-10-05
 published: true
