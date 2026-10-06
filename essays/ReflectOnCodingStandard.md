@@ -11,7 +11,7 @@ labels:
   - ESlint
 ---
 
-<img width="300px" class="rounded float-start pe-4" src="../img/smart-questions/Questions.webp">
+<img width="300px" class="rounded float-start pe-4" src="../img/oip.webp">
 
 ## My first time with coding standards
 
